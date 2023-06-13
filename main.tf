@@ -32,7 +32,7 @@ module "app_service_plan" {
   resource_group_name = module.resourcegroup.name
   os_type             = "Windows"
   worker_count        = 1
-  sku_name            = "F1"
+  sku_name            = "S1"
   additional_tags = {
     CostCenter = "ABC000CBA"
     By         = "parisamoosavinezhad@hotmail.com"
@@ -56,8 +56,27 @@ module "web_app" {
   custom_domain = {
     enabled = false
   }
+  site_config = {
+    always_on                = false
+    ftps_state               = "FtpsOnly"
+    dotnet_framework_version = "v6.0"
+    cors = {
+      allowed_origins = ["*"]
+    }
+  }
   additional_tags = {
     CostCenter = "ABC000CBA"
     By         = "parisamoosavinezhad@hotmail.com"
   }
 }
+
+resource "azurerm_application_security_group" "this" {
+  name                = "tf-appsecuritygroup"
+  location            = module.resourcegroup.location
+  resource_group_name = module.resourcegroup.name
+  tags = {
+    CostCenter = "ABC000CBA"
+    By         = "parisamoosavinezhad@hotmail.com"
+  }
+}
+
